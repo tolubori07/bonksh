@@ -2,11 +2,31 @@ use std::env;
 use std::io::{stdin, stdout, Write};
 use std::path::Path;
 use std::process::{Child, Command, Stdio};
+
+fn get_current_working_dir() -> String {
+    let res = env::current_dir();
+    match res {
+        Ok(path) => path.into_os_string().into_string().unwrap(),
+        Err(_) => "FAILED".to_string(),
+    }
+}
 fn main() {
+    print!(
+        "
+
+██████╗  ██████╗ ███╗   ██╗██╗  ██╗██╗██╗██╗
+██╔══██╗██╔═══██╗████╗  ██║██║ ██╔╝██║██║██║
+██████╔╝██║   ██║██╔██╗ ██║█████╔╝ ██║██║██║
+██╔══██╗██║   ██║██║╚██╗██║██╔═██╗ ╚═╝╚═╝╚═╝
+██████╔╝╚██████╔╝██║ ╚████║██║  ██╗██╗██╗██╗
+╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝╚═╝╚═╝
+
+"
+    );
     loop {
         //we use the → characters as the prompt
         //need to explicitly flush this to ensure it reprints before readline
-        print!(">>>>");
+        print!("Bonksh {} -> ", get_current_working_dir());
         stdout().flush().unwrap();
 
         let mut input = String::new();
@@ -58,11 +78,11 @@ fn main() {
                         .stdin(stdin)
                         .stdout(stdout)
                         .spawn();
-                    match output{
-                        Ok(output) =>{
+                    match output {
+                        Ok(output) => {
                             prev_command = Some(output);
                         }
-                        Err(e)=>{
+                        Err(e) => {
                             prev_command = None;
                             eprintln!("{}", e);
                         }
